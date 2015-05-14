@@ -1,0 +1,11 @@
+/*-------------IE FIXES--------------*/
+/*iframe, embed, object, video { z-index: 1000; }*/
+/*.fancybox-wrap, .fancybox-skin, .fancybox-outer { z-index: 8000; position:relative; }*/
+
+iframe, embed, object, video { z-index: 800!important; }
+
+.fancybox-wrap { z-index: 1000!important; }
+
+.the-testimonial { width: 100%; }
+
+.nav li a {	font-size: 19.5px; }
