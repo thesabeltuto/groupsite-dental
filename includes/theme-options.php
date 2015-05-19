@@ -5,7 +5,7 @@ add_action('admin_menu', 'theme_create_menu');
 require_once('wm4d-functions.php');
 
 // Global variables
-$THEME_VERSION = '2.3';
+$THEME_VERSION = '2.3.1';
 $THEME_CSS_VERSION = '2.3';
 $THEME_JS_VERSION = '2.3';
 $THEME_ADMIN_CSS_VERSION = '2.3';
@@ -25,6 +25,7 @@ function theme_custom_scripts() {
 	wp_enqueue_script( 'jquery-cycle-script', get_stylesheet_directory_uri() . '/js/jquery.cycle.all.js', array( 'jquery' )	);
 	
 	require('custom-codes.php');
+	require('shortcodes.php');
 }
 
 function theme_custom_admin_init() {
@@ -40,6 +41,7 @@ function theme_custom_admin_init() {
 	wp_enqueue_script('custom_header');
 	wp_enqueue_script('theme-custom-admin.js');	
 	wp_enqueue_style('theme-custom-admin.css');
+	
 }
 
 
