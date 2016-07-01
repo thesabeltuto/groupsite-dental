@@ -5,7 +5,7 @@ add_action('admin_menu', 'theme_create_menu');
 require_once('wm4d-functions.php');
 
 // Global variables
-$THEME_VERSION = '2.3.1';
+$THEME_VERSION = '2.3.3';
 $THEME_CSS_VERSION = '2.3';
 $THEME_JS_VERSION = '2.3';
 $THEME_ADMIN_CSS_VERSION = '2.3';
