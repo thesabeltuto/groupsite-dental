@@ -1,27 +1,27 @@
 <?php
 /* USE SHORTCODE IN MENU */
-add_filter( 'wp_nav_menu_objects', 'my_dynamic_menu_items' );
+add_filter( 'wp_nav_menu_objects', 'gs2_my_dynamic_menu_items' );
 
-function my_dynamic_menu_items( $menu_items ) {
+function gs2_my_dynamic_menu_items( $menu_items ) {
     foreach ( $menu_items as $menu_item ) {
 		$title = $menu_item->title;
         if ( preg_match('%client_name%', $title) ) {
-			$title = get_general_data('client_name', $title);
+			$title = gs2_get_general_data('client_name', $title);
         }
         if ( preg_match('%practice_name%', $title) ) {
-			$title = get_general_data('practice_name', $title);
+			$title = gs2_get_general_data('practice_name', $title);
         }
         if ( preg_match('%doctor_name%', $title) ) {
-			$title = get_multi_data('doctor_name', $title);
+			$title = gs2_get_multi_data('doctor_name', $title);
         }
         if ( preg_match('%doctor_title%', $title) ) {
-			$title = get_multi_data('doctor_title', $title);
+			$title = gs2_get_multi_data('doctor_title', $title);
         }
         if ( preg_match('%location%', $title) ) {
-			$title = get_general_data('location', $title);
+			$title = gs2_get_general_data('location', $title);
         }
         if ( preg_match('%phone_numbers_menu%', $title) ) {
-			$title = get_phones_menu($title);
+			$title = gs2_get_phones_menu($title);
         }
 		
 		global $shortcode_tags;
@@ -46,38 +46,38 @@ remove_shortcode ( "dt_sc_phone" );
 remove_shortcode ( "dt_sc_address" );
 remove_shortcode ( "dt_sc_web" );
 
-add_shortcode ( "dt_sc_titled_box", "dt_sc_titled_box_edited" );
-add_shortcode ( "dt_sc_icon_box_colored", "dt_sc_icon_box_colored_edited" );
-add_shortcode ( "dt_sc_icon_box", "dt_sc_icon_box_edited" );
-add_shortcode ( "dt_sc_phone", "dt_sc_phone_edited");
-add_shortcode ( "dt_sc_address", "dt_sc_address_edited");
-add_shortcode ( "dt_sc_web", "dt_sc_web_edited");
+add_shortcode ( "dt_sc_titled_box", "gs2_dt_sc_titled_box_edited" );
+add_shortcode ( "dt_sc_icon_box_colored", "gs2_dt_sc_icon_box_colored_edited" );
+add_shortcode ( "dt_sc_icon_box", "gs2_dt_sc_icon_box_edited" );
+add_shortcode ( "dt_sc_phone", "gs2_dt_sc_phone_edited");
+add_shortcode ( "dt_sc_address", "gs2_dt_sc_address_edited");
+add_shortcode ( "dt_sc_web", "gs2_dt_sc_web_edited");
 
 /* calls for all edited output */
-function call_title_shortcode($title,$content=null){
+function gs2_call_title_shortcode($title,$content=null){
 	if(preg_match('%client_name%', $title)){
-		$title = get_general_data('client_name', $title);
+		$title = gs2_get_general_data('client_name', $title);
 	}
 	if(preg_match('%practice_name%', $title)){
-		$title = get_general_data('practice_name', $title);
+		$title = gs2_get_general_data('practice_name', $title);
 	}
 	if(preg_match('%phone_number%', $title)){
-		$title = get_multi_data('phone_number', $title, $content);
+		$title = gs2_get_multi_data('phone_number', $title, $content);
 	}
 	if(preg_match('%location%', $title)){
-		$title = get_multi_data('location', $title);
+		$title = gs2_get_multi_data('location', $title);
 	}
 	if(preg_match('%doctor_name%', $title)){
-		$title = get_multi_data('doctor_name', $title);
+		$title = gs2_get_multi_data('doctor_name', $title);
 	}
 	if(preg_match('%doctor_title%', $title)){
-		$title = get_multi_data('doctor_title', $title);
+		$title = gs2_get_multi_data('doctor_title', $title);
 	}
 	
 	return $title;	
 }
 
-function get_general_data($match, $title) {
+function gs2_get_general_data($match, $title) {
 	if($match == 'client_name') {
 		$string = explode('%client_name%', $title );
 		$match1 = get_option('wm4d_client');
@@ -105,7 +105,7 @@ function get_general_data($match, $title) {
 }
 
 
-function get_multi_data($match, $title, $content=null) {
+function gs2_get_multi_data($match, $title, $content=null) {
 	if($match == 'phone_number') {
 		$match1 = get_option('wm4d_phone');
 		$matchN = get_option('wm4d_phones');
@@ -200,7 +200,7 @@ function get_multi_data($match, $title, $content=null) {
 	return $title;	
 }
 
-function get_phones_menu($title){
+function gs2_get_phones_menu($title){
 	$title = '';
 	$phones = get_option('wm4d_phones');
 	$location = get_option('wm4d_phones_loc');
@@ -219,18 +219,18 @@ function get_phones_menu($title){
 	return $title;
 }
 
-function call_phone_shortcode($phone){
+function gs2_call_phone_shortcode($phone){
 	if(preg_match('%phone_number%', $phone)){
-		$phone = get_multi_data('phone_number', $phone);
+		$phone = gs2_get_multi_data('phone_number', $phone);
 	} else {
 		$phone = '<a href="tel:'.$phone.'">'.$phone.'</a>';
 	}
 	return $phone;	
 }
 	
-function call_address_shortcode($address, $line){
+function gs2_call_address_shortcode($address, $line){
 	if(preg_match('%location%', $address)){
-		$address = get_multi_data('location', $address);
+		$address = gs2_get_multi_data('location', $address);
 		$string = explode("\n", $address );
 
 		switch ($line) {
@@ -257,24 +257,24 @@ function call_address_shortcode($address, $line){
 	}
 }
 
-function call_description_shortcode($description,$skip_phone=false){
+function gs2_call_description_shortcode($description,$skip_phone=false){
 	if(!$skip_phone && preg_match('%phone_number%', $description)){
-		$description = get_multi_data('phone_number', $description);
+		$description = gs2_get_multi_data('phone_number', $description);
 	}
 	if(preg_match('%doctor_name%', $description)){
-		$description = get_multi_data('doctor_name', $description);
+		$description = gs2_get_multi_data('doctor_name', $description);
 	}
 	if(preg_match('%doctor_title%', $description)){
-		$description = get_multi_data('doctor_title', $description);
+		$description = gs2_get_multi_data('doctor_title', $description);
 	}
 	if(preg_match('%client_name%', $description)){
-		$description = get_general_data('client_name', $description);
+		$description = gs2_get_general_data('client_name', $description);
 	}
 	if(preg_match('%practice_name%', $description)){
-		$description = get_general_data('practice_name', $description);
+		$description = gs2_get_general_data('practice_name', $description);
 	}
 	if(preg_match('%location%', $description)){
-		$data = get_multi_data('location', $description);
+		$data = gs2_get_multi_data('location', $description);
 		$string = preg_replace("#\r\n#",'{br}',trim($data));
 		$description = $string;
 	}
@@ -300,9 +300,9 @@ function call_description_shortcode($description,$skip_phone=false){
 
 }
 
-function call_addresses_shortcode($address){
+function gs2_call_addresses_shortcode($address){
 	if(preg_match('%location%', $address)){
-		$data = get_multi_data('location', $address);
+		$data = gs2_get_multi_data('location', $address);
 		$string = preg_replace("#\r\n#",'',trim($data));
 		$address = $string;
 	}
@@ -319,7 +319,7 @@ function call_addresses_shortcode($address){
 	//return print_r( $data );
 }
 
-function call_icons_shortcode($address, $icons) {
+function gs2_call_icons_shortcode($address, $icons) {
 	if(preg_match('%multi_data%', $address)){
 		$data = get_option('wm4d_locations');
 		$string = '';
@@ -331,7 +331,7 @@ function call_icons_shortcode($address, $icons) {
 	return $icons;
 }
 
-function call_web_shortcode($url){
+function gs2_call_web_shortcode($url){
 	if(preg_match('%self%', $url)){
 		$url = site_url();
 		$a = preg_replace('#^[^:/.]*[:/]+#i', '',urldecode( $url ));
@@ -351,7 +351,7 @@ function call_web_shortcode($url){
 
 /******* REPLACED SHORTCODES FROM ORGINAL *******/
 	/* Titles Box Shortcode */
-	function dt_sc_titled_box_edited($attrs, $content = null) {
+	function gs2_dt_sc_titled_box_edited($attrs, $content = null) {
 		extract ( shortcode_atts ( array (
 				'title' => '',
 				'icon' => '',
@@ -364,7 +364,7 @@ function call_web_shortcode($url){
 		$type = (empty($type)) ? 'dt-sc-titled-box' :"dt-sc-$type";
 		$variation = ( ( $variation ) && ( empty( $bgcolor ) ) ) ? ' ' . $variation : '';
 		$content = DTCoreShortcodesDefination::dtShortcodeHelper( $content );
-		$title = call_title_shortcode($title,$content);
+		$title = gs2_call_title_shortcode($title,$content);
 		
 		$styles = array();
 		if($bgcolor) $styles[] = 'background-color:' . $bgcolor . ';border-color:' . $bgcolor . ';';
@@ -386,7 +386,7 @@ function call_web_shortcode($url){
 	}
 
 	/* Icon Boxes Colored Shortcode */
-	function dt_sc_icon_box_colored_edited($attrs, $content = null, $shortcodename = "") {
+	function gs2_dt_sc_icon_box_colored_edited($attrs, $content = null, $shortcodename = "") {
 		extract ( shortcode_atts ( array (
 				'type' => '',
 				'fontawesome_icon' => '',
@@ -396,7 +396,7 @@ function call_web_shortcode($url){
 		), $attrs ) );
 		
 		$content = DTCoreShortcodesDefination::dtShortcodeHelper ( $content );
-		$title = call_title_shortcode($title,$content);
+		$title = gs2_call_title_shortcode($title,$content);
 		
 		$bgcolor = empty ( $bgcolor ) ? "" : " style='background:{$bgcolor};' ";
 		
@@ -419,7 +419,7 @@ function call_web_shortcode($url){
 	}
 
 	/* Icon Boxes Shortcode */
-	function dt_sc_icon_box_edited($attrs, $content = null, $shortcodename = "") {
+	function gs2_dt_sc_icon_box_edited($attrs, $content = null, $shortcodename = "") {
 		extract ( shortcode_atts ( array (
 				'type' => '',
 				'fontawesome_icon' => '',
@@ -430,7 +430,7 @@ function call_web_shortcode($url){
 		), $attrs ) );
 		
 		$content = DTCoreShortcodesDefination::dtShortcodeHelper ( $content );
-		$title = call_title_shortcode($title,$content);
+		$title = gs2_call_title_shortcode($title,$content);
 		
 		$out =  "<div class='dt-sc-ico-content {$type}'>";
 		if( !empty($fontawesome_icon) ){
@@ -446,12 +446,12 @@ function call_web_shortcode($url){
 	}
 
 	/* Phone Shortcode */
-	function dt_sc_phone_edited($attrs, $content = null) {
+	function gs2_dt_sc_phone_edited($attrs, $content = null) {
 		extract ( shortcode_atts ( array (
 				'phone' => ''
 		), $attrs ) );
 		
-		$phone = call_phone_shortcode($phone);
+		$phone = gs2_call_phone_shortcode($phone);
 
 		$out = '<p class="dt-sc-contact-info">';
 		$out .= "<i class='fa fa-phone'></i>";
@@ -463,17 +463,17 @@ function call_web_shortcode($url){
 	}
 
 	/* Address Shortcode */
-	function dt_sc_address_edited($attrs, $content = null) {
+	function gs2_dt_sc_address_edited($attrs, $content = null) {
 		extract ( shortcode_atts ( array (
 				'line1' => '',
 				'line2' => '',
 				'line3' => '',
 				'line4' => ''
 		), $attrs ) );
-		if(!empty($line1)) $line1 = call_address_shortcode($line1, 'line1'); else $line1 = '';
-		if(!empty($line2)) $line2 = call_address_shortcode($line2, 'line2'); else $line2 = '';
-		if(!empty($line3)) $line3 = call_address_shortcode($line3, 'line3'); else $line3 = '';
-		if(!empty($line4)) $line4 = call_address_shortcode($line4, 'line4'); else $line4 = '';
+		if(!empty($line1)) $line1 = gs2_call_address_shortcode($line1, 'line1'); else $line1 = '';
+		if(!empty($line2)) $line2 = gs2_call_address_shortcode($line2, 'line2'); else $line2 = '';
+		if(!empty($line3)) $line3 = gs2_call_address_shortcode($line3, 'line3'); else $line3 = '';
+		if(!empty($line4)) $line4 = gs2_call_address_shortcode($line4, 'line4'); else $line4 = '';
 		
 		$out = '<p class="dt-sc-contact-info address">';
 		$out .= "<i class='fa fa-rocket'></i>";
@@ -489,11 +489,11 @@ function call_web_shortcode($url){
 	}
 	
 	/* Web Shortcode */
-	function dt_sc_web_edited($attrs, $content = null) {
+	function gs2_dt_sc_web_edited($attrs, $content = null) {
 		extract ( shortcode_atts ( array (
 				'url' => ''
 		), $attrs ) );
-		$url = call_web_shortcode($url);
+		$url = gs2_call_web_shortcode($url);
 		
 		$out = '<p class="dt-sc-contact-info">';
 		$out .= "<i class='fa fa-globe' ></i>";
@@ -508,9 +508,9 @@ function call_web_shortcode($url){
 
 /* EDIT RESPONSIVE MAP SHORTCODE OUTPUT */
 remove_shortcode('res_map');
-//add_shortcode('res_map', 'responsive_map_shortcode_edited');
-add_shortcode('res_map', 'responsive_map_shortcode_edited');
-function responsive_map_shortcode_edited($atts) {
+//add_shortcode('res_map', 'gs2_responsive_map_shortcode_edited');
+add_shortcode('res_map', 'gs2_responsive_map_shortcode_edited');
+function gs2_responsive_map_shortcode_edited($atts) {
 
     // Extract the attributes from the shortcode
     $atts = shortcode_atts(array(
@@ -604,11 +604,11 @@ function responsive_map_shortcode_edited($atts) {
 	// - WM4D SHORTCODE EDIT - catch %% shortcodes
 	// ----------------------------------------------- */
  		$att_address = $atts['address'];
-		$att_address = call_addresses_shortcode($att_address);
+		$att_address = gs2_call_addresses_shortcode($att_address);
 		$att_description = $atts['description'];
-		$att_description = call_description_shortcode($att_description);
+		$att_description = gs2_call_description_shortcode($att_description);
 		$att_icon = $atts['icon'];
-		$att_icon = call_icons_shortcode($att_address, $att_icon);
+		$att_icon = gs2_call_icons_shortcode($att_address, $att_icon);
 
 
       $addresses = explode("|", $att_address ); 
