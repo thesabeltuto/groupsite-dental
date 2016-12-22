@@ -1,8 +1,13 @@
 <?php 
-
 /** MAKE SHORTCODES WORK ON WIDGET **/
 add_filter( 'widget_text', 'shortcode_unautop');
 add_filter( 'widget_text', 'do_shortcode');
+
+/** MAKE THUMBNAILS WORK ON CUSTOM POSTS **/
+//add_action( 'after_setup_theme', 'gsdental_theme_additionals', 99 );
+//function gsdental_theme_additionals() {
+//	add_theme_support( 'post-thumbnails', array( 'procedures', 'offers', 'before-and-afters', 'office-images', 'testimonials' ) );
+//}
 
 /** PROCEDURE CUSTOM TYPE **/
 add_action( 'init', 'custom_post_procedures' );
@@ -27,7 +32,7 @@ function custom_post_procedures() {
 		'description'   => 'Holds our procedures and procedure specific data',
 		'public'        => true,
 		'menu_position' => 5,
-		'supports'      => array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'post-formats' ),
+		'supports'      => array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'post-formats', 'revisions' ),
 		'has_archive'   => true
 	);
 	register_post_type( 'procedures', $args );	
@@ -66,9 +71,8 @@ function gsdental_body_classes( $classes ) {
 	return $classes;
 }
 
-
 /** OFFERS CUSTOM TYPE **/
-add_action( 'init', 'custom_post_offers' );
+//add_action( 'init', 'custom_post_offers' );
 function custom_post_offers() {
 	$labels = array(
 		'name'               => _x( 'Offers', 'post type general name' ),
@@ -137,7 +141,6 @@ function gsdental_taxonomies_offers() {
 	register_taxonomy( 'procedure_tags', 'offers', $args );
 }
 
-
 /** TESTIMONIALS CUSTOM TYPE **/
 add_action( 'init', 'custom_post_testimonials' );
 function custom_post_testimonials() {
@@ -161,7 +164,7 @@ function custom_post_testimonials() {
 		'description'   => 'Holds our testimonials and testimonial specific data',
 		'public'        => true,
 		'menu_position' => 7,
-		'supports'      => array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments' ),
+		'supports'      => array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments', 'revisions' ),
 		'has_archive'   => true,
 	);
 	register_post_type( 'testimonials', $args );	
@@ -208,9 +211,8 @@ function gsdental_taxonomies_testimonials() {
 	register_taxonomy( 'testimonial_categories', 'testimonials', $args );
 }
 
-
 /** BEFORE & AFTERS CUSTOM POST **/
-add_action( 'init', 'custom_post_before_and_afters' );
+//add_action( 'init', 'custom_post_before_and_afters' );
 function custom_post_before_and_afters() {
 	$labels = array(
 		'name'               => _x( 'Before & Afters', 'post type general name' ),
@@ -232,7 +234,7 @@ function custom_post_before_and_afters() {
 		'description'   => 'Holds our Before & Afters specific data',
 		'public'        => true,
 		'menu_position' => 8,
-		'supports'      => array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments', 'images' ),
+		'supports'      => array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments', 'images', 'revisions' ),
 		'has_archive'   => true,
 	);
 	register_post_type( 'before-and-afters', $args );	
@@ -257,8 +259,30 @@ function custom_post_before_and_afters_messages( $messages ) {
 	return $messages;
 }
 
+add_action( 'init', 'gsdental_taxonomies_before_and_afters', 0 );
+function gsdental_taxonomies_before_and_afters() {
+	$labels = array(
+		'name'              => _x( 'Before & Afters Categories', 'taxonomy general name' ),
+		'singular_name'     => _x( 'Before & Afters Category', 'taxonomy singular name' ),
+		'search_items'      => __( 'Search Before & Afters Categories' ),
+		'all_items'         => __( 'All Before & Afters Categories' ),
+		'parent_item'       => __( 'Parent Before & Afters Category' ),
+		'parent_item_colon' => __( 'Parent Before & Afters Category:' ),
+		'edit_item'         => __( 'Edit Before & Afters Category' ), 
+		'update_item'       => __( 'Update Before & Afters Category' ),
+		'add_new_item'      => __( 'Add New Before & Afters Category' ),
+		'new_item_name'     => __( 'New Before & Afters Category' ),
+		'menu_name'         => __( 'Before & Afters Categories' ),
+	);
+	$args = array(
+		'labels' => $labels,
+		'hierarchical' => true,
+	);
+	register_taxonomy( 'before_and_afters_categories', 'before-and-afters', $args );
+}
+
 /** OFFICE IMAGES CUSTOM TYPE **/
-add_action( 'init', 'custom_post_office_images' );
+//add_action( 'init', 'custom_post_office_images' );
 function custom_post_office_images() {
 	$labels = array(
 		'name'               => _x( 'Office Images', 'post type general name' ),
@@ -280,7 +304,7 @@ function custom_post_office_images() {
 		'description'   => 'Holds our office images and office images specific data',
 		'public'        => true,
 		'menu_position' => 9,
-		'supports'      => array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'post-formats' ),
+		'supports'      => array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'post-formats', 'revisions' ),
 		'has_archive'   => true,
 	);
 	register_post_type( 'office-images', $args );	
@@ -305,6 +329,27 @@ function custom_post_office_images_msg( $messages ) {
 	return $messages;
 }
 
+add_action( 'init', 'gsdental_taxonomies_office_images', 0 );
+function gsdental_taxonomies_office_images() {
+	$labels = array(
+		'name'              => _x( 'Office Images Categories', 'taxonomy general name' ),
+		'singular_name'     => _x( 'Office Images Category', 'taxonomy singular name' ),
+		'search_items'      => __( 'Search Office Images Categories' ),
+		'all_items'         => __( 'All Office Images Categories' ),
+		'parent_item'       => __( 'Parent Office Images Category' ),
+		'parent_item_colon' => __( 'Parent Office Images Category:' ),
+		'edit_item'         => __( 'Edit Office Images Category' ), 
+		'update_item'       => __( 'Update Office Images Category' ),
+		'add_new_item'      => __( 'Add New Office Images Category' ),
+		'new_item_name'     => __( 'New Office Images Category' ),
+		'menu_name'         => __( 'Office Images Categories' ),
+	);
+	$args = array(
+		'labels' => $labels,
+		'hierarchical' => true,
+	);
+	register_taxonomy( 'office_images_categories', 'office-images', $args );
+}
 
 /** Special Offer Widget **/
 add_action( 'widgets_init', create_function( '', 'register_widget("gsthirteen_special_offer");'));
@@ -329,7 +374,7 @@ class gsthirteen_special_offer extends WP_Widget {
 		$gform_extend_id = $instance['gform_extend_id'];
 		$gform_consult_url = $instance['gform_consult_url'];
 		$gform_extend_url = $instance['gform_extend_url'];
-		?>
+	  ?>
 		<p>
 		<label for="<?php echo $this->get_field_id('title'); ?>">Title:</label>
 		<input id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo   $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title ?>"   />
@@ -408,8 +453,8 @@ class gsthirteen_special_offer extends WP_Widget {
 		$gform_extend_id = apply_filters('widget_gform_extend_id', $instance['gform_extend_id']);
 		$gform_consult_url = apply_filters('widget_gform_consult_url', $instance['gform_consult_url']);
 		$gform_extend_url = apply_filters('widget_gform_extend_url', $instance['gform_extend_url']);
-		$offer_expires_date = date("m-d-Y");
-		
+		$offer_expires_date = date("Y-m-d");
+	
 		echo $before_widget; 
 		echo '<div id="offer-heading">'.$title.'</div>';
 		echo '<div id="offer-wrap"><div id="offer"><h2>' . $price . '</h2>';
@@ -428,7 +473,6 @@ class gsthirteen_special_offer extends WP_Widget {
 		echo $after_widget;
   }
 }
-
 
 /** Testimonials Widget **/
 add_action( 'widgets_init', create_function( '', 'register_widget("gsdental_testimonials");'));
@@ -457,7 +501,7 @@ class gsdental_testimonials extends WP_Widget {
 		</p>
 		<p>
 		<label for="<?php echo $this->get_field_id('testimonial_seeallurl'); ?>">See All URL:</label>
-		<input id="<?php echo $this->get_field_id( 'testimonial_seeallurl' ); ?>" name="<?php echo   $this->get_field_name( 'testimonial_seeallurl' ); ?>" type="text" value="<?php echo $testimonial_seeallurl ?>"   />
+		<input id="<?php echo $this->get_field_id( 'testimonial_seeallurl' ); ?>" name="<?php echo   $this->get_field_name( 'testimonial_seeallurl' ); ?>" type="text" value="<?php echo $testimonial_seeallurl ?>" />
 		</p>
 		<?php
 	}
@@ -483,8 +527,8 @@ class gsdental_testimonials extends WP_Widget {
 		$slider_args = array('post_type' => 'testimonials', 'posts_per_page' => -1);
 		$loop = new WP_Query($slider_args);
 		while ($loop->have_posts()) : $loop->the_post();
-			echo '<div class="the-testimonial"><div class="testimonial-content">' . get_the_excerpt() . '</div>';
-			//echo '<div class="testimonial-excerpt">'. get_the_excerpt() . '</div>';
+			//echo '<div class="the-testimonial"><div class="testimonial-content">' . get_the_content() . '</div>';
+			echo '<div class="the-testimonial"><div class="testimonial-excerpt">'. get_the_excerpt() . '</div>';
 			echo '<div class="testimonial-title"> &mdash; ' . get_the_title() . '</div></div>';
 		endwhile;
 			
@@ -498,7 +542,6 @@ class gsdental_testimonials extends WP_Widget {
 	}
 }
 
-
 /** Before and After Widget **/
 add_action( 'widgets_init', create_function( '', 'register_widget("gsdental_before_after");'));
 class gsdental_before_after extends WP_Widget {
@@ -510,13 +553,18 @@ class gsdental_before_after extends WP_Widget {
 	}
 	
 	public function form( $instance ) {
-		$instance = wp_parse_args( (array) $instance, array( 'before_after_title' => '') );
+		$instance = wp_parse_args( (array) $instance, array( 'before_after_title' => '', 'before_after_category' => '') );
 		$before_after_title = $instance['before_after_title'];
+		$before_after_category = $instance['before_after_category'];
 		
 		?>
 		<p>
 		<label for="<?php echo $this->get_field_id('before_after_title'); ?>">Title:</label>
 		<input id="<?php echo $this->get_field_id( 'before_after_title' ); ?>" name="<?php echo   $this->get_field_name( 'before_after_title' ); ?>" type="text" value="<?php echo $before_after_title ?>"   />
+		</p>
+		<p>
+		<label for="<?php echo $this->get_field_id('before_after_category'); ?>">Category Slug:</label>
+		<input id="<?php echo $this->get_field_id( 'before_after_category' ); ?>" name="<?php echo   $this->get_field_name( 'before_after_category' ); ?>" type="text" value="<?php echo $before_after_category ?>"   />
 		</p>
 		<?php
 	}
@@ -524,32 +572,35 @@ class gsdental_before_after extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 		$instance = array();
 		$instance['before_after_title'] = $new_instance['before_after_title'];
+		$instance['before_after_category'] = $new_instance['before_after_category'];
 		return $instance;
 	}
   
 	public function widget( $args, $instance ) {
 		extract( $args );
 		$before_after_title = apply_filters( 'widget_title', $instance['before_after_title'] );
+		$before_after_category = apply_filters( 'widget_categories_args', $instance['before_after_category'] );
 		
 		echo $before_widget;
-		echo '<h2 class="widget-title">'.$before_after_title.'</h2>';
-		echo '<ul id="before-after-cycle">';
-		
-		$before_after_args = array('post_type' => 'before-and-afters', 'posts_per_page' => -1);
-		$before_after_loop = new WP_Query($before_after_args);
-		while ($before_after_loop->have_posts()) : $before_after_loop->the_post();
-			echo the_post_thumbnail();
-		endwhile;
-			
-		echo '</ul>';
-		echo '<div id="before-after-nav">';
-		echo '<a href="#"><span id="before-after-prev">Prev</span></a>'; 
-		echo  '<a href="#"><span id="before-after-next">Next</span></a>';
-		echo '</div>';
+        $before_after_args = array('post_type' => 'before-and-afters', 'posts_per_page' => -1,'meta_key'=>'_thumbnail_id', 'before_and_afters_categories'=>$before_after_category);
+        $before_after_loop = new WP_Query($before_after_args);
+        if($before_after_loop->found_posts>0) {
+            echo '<h2 class="widget-title">' . $before_after_title . '</h2>';
+            echo '<ul id="before-after-cycle">';
+            while ($before_after_loop->have_posts()) : $before_after_loop->the_post();
+                echo the_post_thumbnail();
+            endwhile;
+            echo '</ul>';
+            if($before_after_loop->found_posts>1) {
+                echo '<div id="before-after-nav">';
+                echo '<a href="#"><span id="before-after-prev">Prev</span></a>';
+                echo '<a href="#"><span id="before-after-next">Next</span></a>';
+                echo '</div>';
+            }
+        }
 		echo $after_widget;
 	}
 }
-
 
 /** Office Images Widget **/
 add_action( 'widgets_init', create_function( '', 'register_widget("gsdental_office_images");'));
@@ -562,13 +613,18 @@ class gsdental_office_images extends WP_Widget {
 	}
 	
 	public function form( $instance ) {
-		$instance = wp_parse_args( (array) $instance, array( 'office_images_title' => '') );
+		$instance = wp_parse_args( (array) $instance, array( 'office_images_title' => '', 'office_images_category' => '') );
 		$office_images_title = $instance['office_images_title'];
+		$office_images_category = $instance['office_images_category'];
 		
 		?>
 		<p>
 		<label for="<?php echo $this->get_field_id('office_images_title'); ?>">Title:</label>
 		<input id="<?php echo $this->get_field_id( 'office_images_title' ); ?>" name="<?php echo   $this->get_field_name( 'office_images_title' ); ?>" type="text" value="<?php echo $office_images_title ?>"   />
+		</p>
+		<p>
+		<label for="<?php echo $this->get_field_id('office_images_category'); ?>">Category Slug:</label>
+		<input id="<?php echo $this->get_field_id( 'office_images_category' ); ?>" name="<?php echo   $this->get_field_name( 'office_images_category' ); ?>" type="text" value="<?php echo $office_images_category ?>"   />
 		</p>
 		<?php
 	}
@@ -576,31 +632,34 @@ class gsdental_office_images extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 		$instance = array();
 		$instance['office_images_title'] = $new_instance['office_images_title'];
+		$instance['office_images_category'] = $new_instance['office_images_category'];
 		return $instance;
 	}
   
 	public function widget( $args, $instance ) {
 		extract( $args );
 		$office_images_title = apply_filters( 'widget_title', $instance['office_images_title'] );
-		
-		echo $before_widget;
-		echo '<h2 class="widget-title">'.$office_images_title.'</h2>';
-		echo '<ul id="office-images-cycle">';
-		
-		$office_images_args = array('post_type' => 'office-images', 'posts_per_page' => -1);
+		$office_images_category = apply_filters( 'widget_categories_args', $instance['office_images_category'] );
+				
+		$office_images_args = array('post_type' => 'office-images', 'posts_per_page' => -1, 'office_images_categories' => $office_images_category );
 		$office_images_loop = new WP_Query($office_images_args);
-		while ($office_images_loop->have_posts()) : $office_images_loop->the_post();
-			echo the_post_thumbnail();
-		endwhile;
-			
-		echo '</ul>';
-		echo '<div id="office_images-nav">';
-		echo '<a href="#"><span id="office_images-prev">Prev</span></a>'; 
-		echo  '<a href="#"><span id="office_images-next">Next</span></a>';
-		echo '</div>';
+		if($office_images_loop->found_posts>0) {
+			echo $before_widget;
+			echo '<h2 class="widget-title">'.$office_images_title.'</h2>';
+			echo '<ul id="office-images-cycle">';		
+			while ($office_images_loop->have_posts()) : $office_images_loop->the_post();
+				echo the_post_thumbnail();
+			endwhile;
+			echo '</ul>';
+			if($office_images_loop->found_posts>1) {
+				echo '<div id="office-images-nav">';
+				echo '<a href="#"><span id="office-images-prev">Prev</span></a>'; 
+				echo  '<a href="#"><span id="office-images-next">Next</span></a>';
+				echo '</div>';
+				
+			}
+		}
 		echo $after_widget;
 	}
 }
-
-
 ?>
